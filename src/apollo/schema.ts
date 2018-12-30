@@ -1,22 +1,12 @@
 import { gql } from 'apollo-server-lambda'
+import { buildSchema } from 'type-graphql'
 
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
+import { RecipeResolver } from  '../resolvers/recipe'
 
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
+const createSchema = () => {
+  return buildSchema({
+    resolvers: [RecipeResolver]
+  })
 }
 
-const schemaConfig = {
-  typeDefs,
-  resolvers
-}
-
-export default schemaConfig
+export default createSchema

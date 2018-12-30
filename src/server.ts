@@ -1,10 +1,14 @@
+import 'reflect-metadata'
 import { ApolloServer } from 'apollo-server'
-import schemaConfig from './apollo/schema'
+import * as path from 'path'
+
+import createSchema from './apollo/schema'
 
 const PORT = 3000
 
 async function bootstrap () {
-  const server = new ApolloServer(schemaConfig)
+  const schema = await createSchema()
+  const server = new ApolloServer({ schema })
   const { url } = await server.listen(PORT)
   console.log(`Server running on at ${url}`)
 }

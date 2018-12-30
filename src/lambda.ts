@@ -1,7 +1,18 @@
+import 'reflect-metadata'
 import { ApolloServer } from 'apollo-server-lambda'
-import schemaConfig from './apollo/schema'
+import createSchema from './apollo/schema'
 
-const server = new ApolloServer(schemaConfig)
-const handler = server.createHandler()
+const createHandler = async () => {
+  const schema = await createSchema()
+  const server = new ApolloServer({
+    schema
+  })
+  
+  return server.createHandler()
+}
+
+const handler = (event, context, callback) => {
+  createHandler().then(handler => handler(event, context, callback))
+}
 
 export { handler }
