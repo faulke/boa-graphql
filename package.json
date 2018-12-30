@@ -5,8 +5,9 @@
   "main": "",
   "scripts": {
     "build": "tsc",
-    "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
+    "dev": "concurrently \"tsc -w\" \"nodemon .build/src/server.js\"",
     "dev:lambda": "serverless offline start",
+    "migrate": "tsc && typeorm migration:run",
     "test": "jest"
   },
   "author": "",
