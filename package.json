@@ -1,0 +1,22 @@
+{
+  "name": "boa-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "nodemon": "^1.18.9",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "@types/express": "^4.16.0",
+    "express": "^4.16.4"
+  }
+}
