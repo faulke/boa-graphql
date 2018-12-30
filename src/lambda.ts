@@ -1,11 +1,7 @@
-import * as lambdaExpress from 'aws-serverless-express'
-import { Handler, Context } from 'aws-lambda'
-import app from './app'
+import { ApolloServer } from 'apollo-server-lambda'
+import schemaConfig from './apollo/schema'
 
-const server = lambdaExpress.createServer(app)
+const server = new ApolloServer(schemaConfig)
+const handler = server.createHandler()
 
-function hello (event: any, context: Context) {
-  return lambdaExpress.proxy(server, event, context)
-}
-
-export { hello }
+export { handler }

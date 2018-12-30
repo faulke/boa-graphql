@@ -16,15 +16,15 @@ package:
   exclude:
     - node_modules/**/*
   include:
-    src/handler.ts
+    src/lambda.ts
 
 functions:
   hello:
-    handler: src/lambda.hello
+    handler: src/lambda.handler
     events:
       - http:
-          path: hello
-          method: get
+          path: graphql
+          method: post
 
 plugins:
   - serverless-plugin-typescript
