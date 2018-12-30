@@ -1,0 +1,31 @@
+service: boa-graphql # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+package:
+  exclude:
+    - node_modules/**/*
+  include:
+    src/handler.ts
+
+functions:
+  hello:
+    handler: src/lambda.hello
+    events:
+      - http:
+          path: hello
+          method: get
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
