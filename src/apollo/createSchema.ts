@@ -1,12 +1,14 @@
-import { gql } from 'apollo-server-lambda'
 import { buildSchema } from 'type-graphql'
+import { GraphQLSchema } from 'graphql'
 
 import { RecipeResolver } from  '../resolvers/recipe'
 
-const createSchema = () => {
-  return buildSchema({
+async function createSchema(): Promise<GraphQLSchema> {
+  const schema = await buildSchema({
     resolvers: [RecipeResolver]
   })
+
+  return schema
 }
 
 export default createSchema

@@ -1,9 +1,23 @@
 import 'reflect-metadata'
 import { ApolloServer } from 'apollo-server-lambda'
-import createSchema from './apollo/schema'
+import { Handler, Context, Callback } from 'aws-lambda'
+import { getConnection } from 'typeorm'
 
-const createHandler = async () => {
-  const schema = await createSchema()
+import createSchema from './apollo/createSchema'
+import connect from './orm/connection'
+
+async function createHandler(): Promise<Handler> {
+  // check for existing default connection pool
+  try {
+    getConnection()
+  } catch (error) {
+    await connect()
+  }
+
+  // check if schema already exists
+  (global as any).schema = (global as any).schema || await createSchema()
+
+  const schema = (global as any).schema
   const server = new ApolloServer({
     schema
   })
@@ -11,7 +25,7 @@ const createHandler = async () => {
   return server.createHandler()
 }
 
-const handler = (event, context, callback) => {
+const handler: Handler = (event: any, context: Context, callback: Callback) => {
   createHandler().then(handler => handler(event, context, callback))
 }
 
