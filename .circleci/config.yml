@@ -10,7 +10,7 @@ jobs:
           command: npm install
       - deploy:
           name: serverless-deploy
-          command: npm deploy
+          command: npm run deploy
 workflows:
   version: 2
   deploy:
