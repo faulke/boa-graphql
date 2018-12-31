@@ -4,7 +4,7 @@ import { ApolloServer } from 'apollo-server'
 import createSchema from './apollo/createSchema'
 import connect from './orm/connection'
 
-const PORT = 3000
+const PORT = 4000
 
 async function bootstrap () {
   await connect()
