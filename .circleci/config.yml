@@ -1,13 +1,26 @@
 version: 2
 jobs:
+  install:
+    docker:
+      - image: circleci/node:11.6.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            # when lock file changes, use increasingly general patterns to restore cache
+            - node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - node-v1-{{ .Branch }}-
+            - node-v1-
+      - run: npm install
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
   deploy:
     docker:
       - image: circleci/node:11.6.0
     steps:
       - checkout
-      - run:
-          name: npm-install
-          command: npm install
       - deploy:
           name: serverless-deploy
           command: npm run deploy
@@ -15,4 +28,10 @@ workflows:
   version: 2
   deploy:
     jobs:
-      - deploy
+      - install
+      - deploy:
+          requires:
+            - install
+          filters:
+            branches:
+              only: master
