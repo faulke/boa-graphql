@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
     "@types/graphql": "^14.0.3",
+    "apollo-server": "^2.3.1",
     "concurrently": "^4.1.0",
     "dotenv": "^6.2.0",
     "nodemon": "^1.18.9",
