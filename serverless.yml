@@ -3,21 +3,17 @@ service: boa-graphql # NOTE: update this with your service name
 provider:
   name: aws
   runtime: nodejs8.10
+  region: us-west-2
+  stage: ${opt:stage, 'dev'}
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
+custom: ${file(conf.${self:provider.stage}.yml)}
 
 package:
   exclude:
-    - node_modules/**/*
+    - "**/*.js.map"
   include:
-    - src/lambda.ts
-    - ormconfig.json
+    - src/lambda.js
+    - ormconfig.js
 
 functions:
   hello:
@@ -26,6 +22,19 @@ functions:
       - http:
           path: graphql
           method: post
+    vpc:
+      securityGroupIds:
+        - sg-0291bd8d1e232f49f
+      subnetIds:
+        - subnet-0b97ee17592881f18
+        - subnet-0fc7236de087f7873
+    environment:
+      TYPEORM_HOST: ${self:custom.TYPEORM_HOST}
+      TYPEORM_USERNAME: ${self:custom.TYPEORM_USERNAME}
+      TYPEORM_PASSWORD: ${self:custom.TYPEORM_PASSWORD}
+      TYPEORM_DATABASE: ${self:custom.TYPEORM_DATABASE}
+      BASE_DIR: ${self:custom.BASE_DIR}
+      STAGE: ${self:provider.stage}
 
 plugins:
   - serverless-plugin-typescript

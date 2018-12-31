@@ -7,3 +7,9 @@ jspm_packages
 
 dist
 .build
+
+.terraform
+variables.tf
+
+conf.*.yml
+.env

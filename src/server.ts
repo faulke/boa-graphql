@@ -11,7 +11,7 @@ async function bootstrap () {
   const schema = await createSchema()
   const server = new ApolloServer({ schema })
   const { url } = await server.listen(PORT)
-  console.log(`Server running on at ${url}/graphql`)
+  console.log(`Server running on at ${url}graphql`)
 }
 
 bootstrap()
