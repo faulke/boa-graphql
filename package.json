@@ -8,6 +8,7 @@
     "dev": "concurrently \"tsc -w\" \"nodemon .build/src/server.js\"",
     "dev:lambda": "serverless offline start --port 4000",
     "migrate": "tsc && typeorm migration:run",
+    "deploy": "serverless deploy --stage prod",
     "test": "jest"
   },
   "author": "",
@@ -18,6 +19,7 @@
     "concurrently": "^4.1.0",
     "dotenv": "^6.2.0",
     "nodemon": "^1.18.9",
+    "serverless": "^1.35.1",
     "serverless-offline": "^3.31.3",
     "serverless-plugin-typescript": "^1.1.5",
     "typescript": "^3.2.2"
