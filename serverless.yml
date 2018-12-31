@@ -22,6 +22,7 @@ functions:
       - http:
           path: graphql
           method: post
+          cors: true
     vpc:
       securityGroupIds:
         - sg-0291bd8d1e232f49f
