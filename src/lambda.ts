@@ -26,7 +26,12 @@ async function createHandler(): Promise<Handler> {
 }
 
 const handler: Handler = (event: any, context: Context, callback: Callback) => {
-  createHandler().then(handler => handler(event, context, callback))
+  const callbackFilter = (error, output) => {
+    const customOutput = output
+    customOutput.headers['access-control-allow-origin'] = '*'
+    callback(error, customOutput)
+  }
+  createHandler().then(handler => handler(event, context, callbackFilter))
 }
 
 export { handler }
