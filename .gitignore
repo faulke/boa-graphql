@@ -11,5 +11,5 @@ dist
 .terraform
 variables.tf
 
-conf.*.yml
+conf.dev.yml
 .env
