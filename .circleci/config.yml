@@ -11,3 +11,8 @@ jobs:
       - deploy:
           name: serverless-deploy
           command: npm deploy
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - deploy
