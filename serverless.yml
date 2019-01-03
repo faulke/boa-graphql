@@ -24,11 +24,8 @@ functions:
           method: post
           cors: true
     vpc:
-      securityGroupIds:
-        - sg-0291bd8d1e232f49f
-      subnetIds:
-        - subnet-0b97ee17592881f18
-        - subnet-0fc7236de087f7873
+      securityGroupIds: ${self:custom.SECURITY_GROUPS}
+      subnetIds: ${self:custom.SUBNETS}
     environment:
       TYPEORM_HOST: ${self:custom.TYPEORM_HOST}
       TYPEORM_USERNAME: ${self:custom.TYPEORM_USERNAME}
