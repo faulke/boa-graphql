@@ -23,7 +23,6 @@ functions:
           path: graphql
           method: post
           cors: true
-          authorizer: aws_iam
     vpc:
       securityGroupIds: ${self:custom.SECURITY_GROUPS}
       subnetIds: ${self:custom.SUBNETS}
