@@ -9,14 +9,13 @@ const region = 'us-west-2'
 const keysUrl = `https://cognito-idp.${region}.amazonaws.com/${userpoolId}/.well-known/jwks.json`
 
 async function handler (event: any, context: Context, callback: Callback) {
-  console.log(event)
   const token = event.authorizationToken
   const { header } = jwt.decode(token, { complete: true })
   const kid = header.kid
 
   // fetch jwk from amazon
   const { keys } = await request({ url: keysUrl, json: true })
-  console.log('keys fetched')
+
   // find appropriate key
   let keyIndex = -1
 
@@ -28,7 +27,7 @@ async function handler (event: any, context: Context, callback: Callback) {
   }
 
   if (keyIndex === -1) {
-    return callback('No matching key found.')
+    callback('No matching key found.')
   }
 
   // convert key to pem
@@ -40,21 +39,21 @@ async function handler (event: any, context: Context, callback: Callback) {
   try {
     verified = jwt.verify(token, pem)
   } catch (error) {
-    return callback('Could not verify token.')
+    callback('Could not verify token.')
   }
 
   // check audience
   if (verified.aud !== appClientId) {
-    return callback('Audience doesn\'t match.')
+    callback('Audience doesn\'t match.')
   }
 
   // check expired
   const current = Math.floor(+new Date() / 1000)
   if (current > verified.exp) {
-    return callback('Token is expired.')
+    callback('Token is expired.')
   }
   
-  return callback(null, verified)
+  callback(null, verified)
 }
 
 export { handler }
