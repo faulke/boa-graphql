@@ -15,9 +15,19 @@ jobs:
           paths:
             - ./node_modules
           key: node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+  migrations:
+      - image: circleci/node:11.6.0    
   deploy:
     docker:
       - image: circleci/node:11.6.0
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - node-v1-{{ .Branch }}-
+            - node-v1-
+      - run: npm run migrate
     steps:
       - checkout
       - restore_cache:
