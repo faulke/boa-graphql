@@ -16,8 +16,6 @@ jobs:
             - ./node_modules
           key: node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
   migrations:
-      - image: circleci/node:11.6.0    
-  deploy:
     docker:
       - image: circleci/node:11.6.0
     steps:
@@ -43,8 +41,12 @@ workflows:
   deploy:
     jobs:
       - install
+      - migrations:
+          requires:
+            - install
       - deploy:
           requires:
+            - migrations
             - install
           filters:
             branches:
