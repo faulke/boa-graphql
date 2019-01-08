@@ -38,11 +38,6 @@ functions:
 
   postConfirm:
     handler: src/lambda/postConfirm.handler
-    events:
-      - http:
-          path: confirm
-          method: post
-          cors: true
     vpc:
       securityGroupIds: ${self:custom.SECURITY_GROUPS}
       subnetIds: ${self:custom.SUBNETS}
