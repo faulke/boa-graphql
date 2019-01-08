@@ -35,7 +35,6 @@ workflows:
       - install
       - deploy:
           requires:
-            - migrations
             - install
           filters:
             branches:
