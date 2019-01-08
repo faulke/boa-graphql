@@ -1,7 +1,8 @@
 import { Client } from 'pg'
 
 async function handler (event: any, context: any): Promise<any> {
-  console.log(event)
+  const { email } = event.userAttributes
+  console.log(email)
   const config = {
     user: process.env.TYPEORM_USERNAME,
     password: process.env.TYPEORM_PASSWORD,
@@ -9,15 +10,14 @@ async function handler (event: any, context: any): Promise<any> {
     host: process.env.TYPEORM_HOST,
     port: 5432
   }
-
   const client = new Client(config)
+
   await client.connect()
+  const res = await client.query('insert into users (email) values ($1) returning *', [email])
+  console.log(res.rows[0])
   await client.end()
 
-  return {
-    statusCode: 200,
-    body: 'User added!'
-  }
+  return event
 }
 
 export { handler }
