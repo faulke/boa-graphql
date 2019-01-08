@@ -13,8 +13,9 @@ async function handler (event: any, context: any): Promise<any> {
   const client = new Client(config)
 
   await client.connect()
-  const res = await client.query('insert into user (username, name, email) values ($1) returning *', [userName, null, email])
-  console.log(res.rows[0])
+  const res = await client.query('insert into "user" (username, name, email) values ($1, $2, $3) returning *', [userName, null, email])
+  const user = res.rows[0]
+  console.log('Added user', user.id)
   await client.end()
 
   return event
