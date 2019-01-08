@@ -1,7 +1,7 @@
 import { Client } from 'pg'
 
 async function handler (event: any, context: any): Promise<any> {
-  const { email } = event.userAttributes
+  const { email } = event.request.userAttributes
   console.log(email)
   const config = {
     user: process.env.TYPEORM_USERNAME,
