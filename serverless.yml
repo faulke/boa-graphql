@@ -14,8 +14,13 @@ provider:
 custom: ${file(conf.${self:provider.stage}.yml)}
 
 package:
+  include:
+    - src/lambda/jwtAuth.js
+    - src/lambda/graphql.js
+    - src/lambda/postConfirm.js
+    - ormconfig.js
   exclude:
-    - src/**
+    - "**/*.js.map"
 
 functions:
   graphql:
@@ -32,28 +37,19 @@ functions:
     environment:
       BASE_DIR: ${self:custom.BASE_DIR}
       STAGE: ${self:provider.stage}
-    package:
-      include:
-        - src/lambda/graphql.js
-        - ormconfig.js
 
   postConfirm:
     handler: src/lambda/postConfirm.handler
     vpc:
       securityGroupIds: ${self:custom.SECURITY_GROUPS}
       subnetIds: ${self:custom.SUBNETS}
-    package:
-      include:
-        - src/lambda/postConfirm.js
 
   jwtAuth:
     handler: src/lambda/jwtAuth.handler
     vpc:
       securityGroupIds: ${self:custom.SECURITY_GROUPS}
       subnetIds: ${self:custom.SUBNETS}
-    package:
-      include:
-        - src/lambda/jwtAuth.js
+
 resources:
   Resources:
     GatewayResponseDefault4XX:
