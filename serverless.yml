@@ -5,6 +5,11 @@ provider:
   runtime: nodejs8.10
   region: us-west-2
   stage: ${opt:stage, 'dev'}
+  environment:
+    TYPEORM_HOST: ${self:custom.TYPEORM_HOST}
+    TYPEORM_USERNAME: ${self:custom.TYPEORM_USERNAME}
+    TYPEORM_PASSWORD: ${self:custom.TYPEORM_PASSWORD}
+    TYPEORM_DATABASE: ${self:custom.TYPEORM_DATABASE}
 
 custom: ${file(conf.${self:provider.stage}.yml)}
 
@@ -13,6 +18,7 @@ package:
     - "**/*.js.map"
   include:
     - src/lambda/graphql.js
+    - src/lambda/postConfirm.js
     - ormconfig.js
 
 functions:
@@ -27,12 +33,19 @@ functions:
       securityGroupIds: ${self:custom.SECURITY_GROUPS}
       subnetIds: ${self:custom.SUBNETS}
     environment:
-      TYPEORM_HOST: ${self:custom.TYPEORM_HOST}
-      TYPEORM_USERNAME: ${self:custom.TYPEORM_USERNAME}
-      TYPEORM_PASSWORD: ${self:custom.TYPEORM_PASSWORD}
-      TYPEORM_DATABASE: ${self:custom.TYPEORM_DATABASE}
       BASE_DIR: ${self:custom.BASE_DIR}
       STAGE: ${self:provider.stage}
+
+  postConfirm:
+    handler: src/lambda/postConfirm.handler
+    events:
+      - http:
+          path: confirm
+          method: post
+          cors: true
+    vpc:
+      securityGroupIds: ${self:custom.SECURITY_GROUPS}
+      subnetIds: ${self:custom.SUBNETS}
 
 plugins:
   - serverless-plugin-typescript
