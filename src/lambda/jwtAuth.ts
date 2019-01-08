@@ -9,7 +9,8 @@ const region = 'us-west-2'
 const keysUrl = `https://cognito-idp.${region}.amazonaws.com/${userpoolId}/.well-known/jwks.json`
 
 async function handler (event: any, context: Context, callback: Callback) {
-  const { token } = event
+  console.log(event)
+  const token = event.authorizationToken
   const { header } = jwt.decode(token, { complete: true })
   const kid = header.kid
 
