@@ -15,11 +15,7 @@ custom: ${file(conf.${self:provider.stage}.yml)}
 
 package:
   exclude:
-    - "**/*.js.map"
-  include:
-    - src/lambda/graphql.js
-    - src/lambda/postConfirm.js
-    - ormconfig.js
+    - src/**
 
 functions:
   graphql:
@@ -29,19 +25,36 @@ functions:
           path: graphql
           method: post
           cors: true
+          authorizer: jwtAuth
     vpc:
       securityGroupIds: ${self:custom.SECURITY_GROUPS}
       subnetIds: ${self:custom.SUBNETS}
     environment:
       BASE_DIR: ${self:custom.BASE_DIR}
       STAGE: ${self:provider.stage}
+    package:
+      include:
+        - src/lambda/graphql.js
+        - ormconfig.js
 
   postConfirm:
     handler: src/lambda/postConfirm.handler
     vpc:
       securityGroupIds: ${self:custom.SECURITY_GROUPS}
       subnetIds: ${self:custom.SUBNETS}
+    package:
+      include:
+        - src/lambda/postConfirm.js
 
+  jwtAuth:
+    handler: src/lambda/jwtAuth.handler
+    vpc:
+      securityGroupIds: ${self:custom.SECURITY_GROUPS}
+      subnetIds: ${self:custom.SUBNETS}
+    package:
+      include:
+        - src/lambda/jwtAuth.js
+    
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
