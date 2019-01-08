@@ -12,12 +12,12 @@ package:
   exclude:
     - "**/*.js.map"
   include:
-    - src/lambda.js
+    - src/lambda/graphql.js
     - ormconfig.js
 
 functions:
-  hello:
-    handler: src/lambda.handler
+  graphql:
+    handler: src/lambda/graphql.handler
     events:
       - http:
           path: graphql
