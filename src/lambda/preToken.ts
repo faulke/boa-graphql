@@ -9,6 +9,8 @@ async function handler (event: any, context: Context, callback: Callback) {
     }
   }
 
+  event.response = response
+
   callback(null, event)
 }
 
