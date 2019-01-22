@@ -20,7 +20,8 @@ module "vpc" {
   cidr = "10.0.0.0/16"
 
   azs              = ["us-west-2a", "us-west-2b"]
-  public_subnets   = ["10.0.1.0/24", "10.0.2.0/24"]
+  public_subnets   = ["10.0.1.0/24"]
+  private_subnets  = ["10.0.11.0/24", "10.0.12.0/24"]
   database_subnets = ["10.0.21.0/24", "10.0.22.0/24"]
 
   create_database_subnet_group = true
@@ -29,6 +30,28 @@ module "vpc" {
     Application = "boaguides"
     Environment = "prod"
   }
+}
+
+# nat instance in vpc public subnet
+resource "aws_instance" "nat_instance" {
+  ami           = "ami-032509850cf9ee54e"
+  instance_type = "t2.micro"
+
+  subnet_id     = "${element(module.vpc.public_subnets, 0)}"
+  security_groups = ["${module.vpc.default_security_group_id}"]
+
+  tags = {
+    Application = "boaguides"
+    Environment = "prod"
+  }
+}
+
+# route from private subnets to nat instance
+resource "aws_route" "nat_route" {
+  count = "${length(module.vpc.private_route_table_ids)}"
+  route_table_id = "${element(module.vpc.private_route_table_ids, count.index)}"
+  destination_cidr_block = "0.0.0.0/0"
+  network_interface_id = "${aws_instance.nat_instance.network_interface_id}"
 }
 
 # db security group 5432 ingress
@@ -40,7 +63,7 @@ module "db_sg" {
   description = "Security group for RDS instance"
   vpc_id      = "${module.vpc.vpc_id}"
 
-  ingress_cidr_blocks = ["${module.vpc.public_subnets_cidr_blocks}"]
+  ingress_cidr_blocks = ["${module.vpc.private_subnets_cidr_blocks}"]
   ingress_rules = ["postgresql-tcp"]
 }
 
