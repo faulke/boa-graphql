@@ -7,7 +7,12 @@ async function connect() {
   TypeGraphql.useContainer(Container)
   TypeORM.useContainer(Container)
 
-  await createConnection()
+  try {
+    console.log('making connection')
+    await createConnection()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export default connect
