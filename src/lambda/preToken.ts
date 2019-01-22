@@ -1,8 +1,6 @@
-import { Context, Callback } from 'aws-lambda'
 import { Client } from 'pg'
 
-async function handler (event: any, context: Context) {
-  console.log(event)
+async function handler (event: any) {
   const { email } = event.request.userAttributes
   const config = {
     user: process.env.TYPEORM_USERNAME,
@@ -16,20 +14,22 @@ async function handler (event: any, context: Context) {
   await client.connect()
 
   const res = await client.query('select id from "user" where email = $1', [ email ])
-  const id = res.rows[0]
-  console.log('DEBUG: loggin in user', id)
-
+  const user = res.rows[0]
   await client.end()
 
-  const response = {
-    claimsOverrideDetails: {
-      claimsToAddOrOverride: {
-        userId: id
+  if (user) {
+    console.log('DEBUG: logging in user', user.id)
+
+    const response = {
+      claimsOverrideDetails: {
+        claimsToAddOrOverride: {
+          userId: user.id
+        }
       }
     }
-  }
 
-  event.response = response
+    event.response = response
+  }
 
   return event
 }
