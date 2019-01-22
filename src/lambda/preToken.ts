@@ -2,6 +2,7 @@ import { Context, Callback } from 'aws-lambda'
 import { Client } from 'pg'
 
 async function handler (event: any, context: Context) {
+  console.log(event)
   const { email } = event.request.userAttributes
   const config = {
     user: process.env.TYPEORM_USERNAME,
