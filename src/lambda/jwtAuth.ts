@@ -52,8 +52,23 @@ async function handler (event: any, context: Context, callback: Callback) {
   if (current > verified.exp) {
     callback('Token is expired.')
   }
+
+  const response = {
+    principalId: 'user1',
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Action: 'execute-api:Invoke',
+        Effect: 'Allow',
+        Resource: 'arn:aws:execute-api:us-west-2:580022145584:o84l26plo2/*/POST/graphql'
+      }
+    ],
+    context: {
+      token
+    }
+  }
   
-  callback(null, verified)
+  callback(null, JSON.stringify(response))
 }
 
 export { handler }

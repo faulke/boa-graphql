@@ -34,11 +34,15 @@ module "vpc" {
 
 # nat instance in vpc public subnet
 resource "aws_instance" "nat_instance" {
-  ami           = "ami-032509850cf9ee54e"
+  ami           = "ami-0b840e8a1ce4cdf15"
   instance_type = "t2.micro"
 
-  subnet_id     = "${element(module.vpc.public_subnets, 0)}"
-  security_groups = ["${module.vpc.default_security_group_id}"]
+  subnet_id       = "${element(module.vpc.public_subnets, 0)}"
+  vpc_security_group_ids = ["${module.vpc.default_security_group_id}"]
+
+  key_name = "boa-key"
+
+  source_dest_check = false
 
   tags = {
     Application = "boaguides"
@@ -48,6 +52,7 @@ resource "aws_instance" "nat_instance" {
 
 # route from private subnets to nat instance
 resource "aws_route" "nat_route" {
+  depends_on = ["aws_instance.nat_instance"]
   count = "${length(module.vpc.private_route_table_ids)}"
   route_table_id = "${element(module.vpc.private_route_table_ids, count.index)}"
   destination_cidr_block = "0.0.0.0/0"
