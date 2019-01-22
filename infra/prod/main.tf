@@ -20,7 +20,6 @@ module "vpc" {
   cidr = "10.0.0.0/16"
 
   azs              = ["us-west-2a", "us-west-2b"]
-  public_subnets   = ["10.0.1.0/24"]
   private_subnets  = ["10.0.11.0/24", "10.0.12.0/24"]
   database_subnets = ["10.0.21.0/24", "10.0.22.0/24"]
 
@@ -30,33 +29,6 @@ module "vpc" {
     Application = "boaguides"
     Environment = "prod"
   }
-}
-
-# nat instance in vpc public subnet
-resource "aws_instance" "nat_instance" {
-  ami           = "ami-0b840e8a1ce4cdf15"
-  instance_type = "t2.micro"
-
-  subnet_id       = "${element(module.vpc.public_subnets, 0)}"
-  vpc_security_group_ids = ["${module.vpc.default_security_group_id}"]
-
-  key_name = "boa-key"
-
-  source_dest_check = false
-
-  tags = {
-    Application = "boaguides"
-    Environment = "prod"
-  }
-}
-
-# route from private subnets to nat instance
-resource "aws_route" "nat_route" {
-  depends_on = ["aws_instance.nat_instance"]
-  count = "${length(module.vpc.private_route_table_ids)}"
-  route_table_id = "${element(module.vpc.private_route_table_ids, count.index)}"
-  destination_cidr_block = "0.0.0.0/0"
-  network_interface_id = "${aws_instance.nat_instance.network_interface_id}"
 }
 
 # db security group 5432 ingress
