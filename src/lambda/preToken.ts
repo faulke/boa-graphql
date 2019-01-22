@@ -1,6 +1,7 @@
 import { Context, Callback } from 'aws-lambda'
 
 async function handler (event: any, context: Context, callback: Callback) {
+  console.log(event.request.userAttributes)
   const response = {
     claimsOverrideDetails: {
       claimsToAddOrOverride: {
