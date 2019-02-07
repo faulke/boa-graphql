@@ -30,7 +30,6 @@ functions:
           path: graphql
           method: post
           cors: true
-          authorizer: jwtAuth
     vpc:
       securityGroupIds: ${self:custom.SECURITY_GROUPS}
       subnetIds: ${self:custom.SUBNETS}
@@ -46,12 +45,6 @@ functions:
 
   preToken:
     handler: src/lambda/preToken.handler
-    vpc:
-      securityGroupIds: ${self:custom.SECURITY_GROUPS}
-      subnetIds: ${self:custom.SUBNETS}
-  
-  jwtAuth:
-    handler: src/lambda/jwtAuth.handler
     vpc:
       securityGroupIds: ${self:custom.SECURITY_GROUPS}
       subnetIds: ${self:custom.SUBNETS}
