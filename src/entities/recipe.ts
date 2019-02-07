@@ -6,7 +6,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 export class Recipe {
   @Field(type => ID)
   @PrimaryGeneratedColumn()
-  readonly id: number;
+  readonly id: number
 
   @Field()
   @Column()
