@@ -10,6 +10,25 @@ const keysUrl = `https://cognito-idp.${region}.amazonaws.com/${userpoolId}/.well
 
 async function handler (event: any, context: Context, callback: Callback) {
   const token = event.authorizationToken
+  const response = {
+    principalId: 'user1',
+    Version: '2012-10-17',
+    Statement: [
+      {
+        Action: 'execute-api:Invoke',
+        Effect: 'Allow',
+        Resource: 'arn:aws:execute-api:us-west-2:580022145584:o84l26plo2/*/POST/graphql'
+      }
+    ],
+    context: {
+      token: null
+    }
+  }
+
+  if (!token) {
+    return callback(null, JSON.stringify(response))
+  }
+
   const { header } = jwt.decode(token, { complete: true })
   const kid = header.kid
 
@@ -27,7 +46,7 @@ async function handler (event: any, context: Context, callback: Callback) {
   }
 
   if (keyIndex === -1) {
-    callback('No matching key found.')
+    return callback('No matching key found.')
   }
 
   // convert key to pem
@@ -39,36 +58,23 @@ async function handler (event: any, context: Context, callback: Callback) {
   try {
     verified = jwt.verify(token, pem)
   } catch (error) {
-    callback('Could not verify token.')
+    return callback('Could not verify token.')
   }
 
   // check audience
   if (verified.aud !== appClientId) {
-    callback('Audience doesn\'t match.')
+    return callback('Audience doesn\'t match.')
   }
 
   // check expired
   const current = Math.floor(+new Date() / 1000)
   if (current > verified.exp) {
-    callback('Token is expired.')
+    return callback('Token is expired.')
   }
 
-  const response = {
-    principalId: 'user1',
-    Version: '2012-10-17',
-    Statement: [
-      {
-        Action: 'execute-api:Invoke',
-        Effect: 'Allow',
-        Resource: 'arn:aws:execute-api:us-west-2:580022145584:o84l26plo2/*/POST/graphql'
-      }
-    ],
-    context: {
-      token
-    }
-  }
+  response.context.token = token
   
-  callback(null, JSON.stringify(response))
+  return callback(null, JSON.stringify(response))
 }
 
 export { handler }
