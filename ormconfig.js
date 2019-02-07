@@ -13,7 +13,9 @@ module.exports = {
   database: process.env.TYPEORM_DATABASE,
   migrationsTablename: 'migrations',
   migrations: [`${process.env.BASE_DIR}/migrations/*.js`],
-  entities: [`${process.env.BASE_DIR}/entities/*.js`],
+  entities: isDev
+    ? [`${process.env.BASE_DIR}/entities/*.ts`]
+    : [`${process.env.BASE_DIR}/entities/*.js`],
   cli: {
     migrationsDir: 'src/migrations'
   },

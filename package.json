@@ -4,10 +4,12 @@
   "description": "",
   "main": "",
   "scripts": {
-    "build": "tsc",
-    "dev": "concurrently \"tsc -w\" \"nodemon .build/src/server.js\"",
+    "start": "ts-node src/server.ts",
+    "clean": "rm -r ./.build",
+    "build": "npm run clean && tsc",
+    "dev": "./node_modules/nodemon/bin/nodemon.js",
     "dev:lambda": "serverless offline start --port 4000",
-    "migrate": "tsc && typeorm migration:run",
+    "migrate": "npm run build && typeorm migration:run",
     "deploy": "serverless deploy --stage prod",
     "test": "jest"
   },
@@ -23,6 +25,7 @@
     "serverless": "^1.35.1",
     "serverless-offline": "^3.31.3",
     "serverless-plugin-typescript": "^1.1.5",
+    "ts-node": "^8.0.2",
     "typescript": "^3.2.2"
   },
   "dependencies": {
