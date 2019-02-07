@@ -2,6 +2,7 @@ import 'reflect-metadata'
 import { ApolloServer } from 'apollo-server-lambda'
 import { Handler, Context, Callback } from 'aws-lambda'
 import { getConnection } from 'typeorm'
+import jwt from 'jsonwebtoken'
 
 import createSchema from '../apollo/createSchema'
 import connect from '../orm/connection'
@@ -20,8 +21,15 @@ async function createHandler(): Promise<Handler> {
   const schema = (global as any).schema
   const server = new ApolloServer({
     schema,
-    context: ({ event, context }) => {
-      console.log(event.requestContext)
+    context: ({ event }) => {
+      const token = event.headers.Authorization
+
+      if (token) {
+        const { userId } = jwt.decode(token)
+        return { userId }
+      }
+      
+      return {}
     }
   })
   

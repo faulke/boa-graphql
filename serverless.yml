@@ -30,6 +30,10 @@ functions:
           path: graphql
           method: post
           cors: true
+      - http:
+          path: graphql
+          method: get
+          cors: true
     vpc:
       securityGroupIds: ${self:custom.SECURITY_GROUPS}
       subnetIds: ${self:custom.SUBNETS}
