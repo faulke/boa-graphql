@@ -19,7 +19,10 @@ async function createHandler(): Promise<Handler> {
 
   const schema = (global as any).schema
   const server = new ApolloServer({
-    schema
+    schema,
+    context: ({ event, context }) => {
+      console.log(event.requestContext)
+    }
   })
   
   return server.createHandler()
