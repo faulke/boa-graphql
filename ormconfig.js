@@ -12,12 +12,12 @@ module.exports = {
   password: process.env.TYPEORM_PASSWORD,
   database: process.env.TYPEORM_DATABASE,
   migrationsTablename: 'migrations',
-  migrations: [`${process.env.BASE_DIR}/migrations/*.js`],
+  migrations: [`${process.env.MIGRATIONS_DIR}/migrations/*.js`],
   entities: isDev
     ? [`${process.env.BASE_DIR}/entities/*.ts`]
     : [`${process.env.BASE_DIR}/entities/*.js`],
   cli: {
-    migrationsDir: 'src/migrations'
+    migrationsDir: `${process.env.BASE_DIR}/migrations`
   },
   logger: isDev && 'advanced-console',
   logging: isDev && 'all',

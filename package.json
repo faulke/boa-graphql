@@ -9,9 +9,10 @@
     "build": "npm run clean && tsc",
     "dev": "./node_modules/nodemon/bin/nodemon.js",
     "dev:lambda": "serverless offline start --port 4000",
-    "migrate": "npm run build && typeorm migration:run",
+    "migrate": "npm run build && npm run typeorm -- migration:run",
     "deploy": "serverless deploy --stage prod",
-    "test": "jest"
+    "test": "jest",
+    "typeorm": "ts-node ./node_modules/.bin/typeorm"
   },
   "author": "",
   "license": "ISC",

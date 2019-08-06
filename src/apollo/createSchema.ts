@@ -5,6 +5,7 @@ import { RecipeResolver } from  '../resolvers/recipe'
 import { UserResolver } from '../resolvers/user'
 import { GuideResolver } from '../resolvers/guide'
 import { TripResolver } from '../resolvers/trip'
+import { RateUnitResolver } from '../resolvers/rateUnit'
 
 async function createSchema(): Promise<GraphQLSchema> {
   const schema = await buildSchema({
@@ -12,7 +13,8 @@ async function createSchema(): Promise<GraphQLSchema> {
       RecipeResolver,
       UserResolver,
       GuideResolver,
-      TripResolver
+      TripResolver,
+      RateUnitResolver
     ]
   })
 
